@@ -40,6 +40,24 @@ console.log(r.width);  // 800
 
 Fields which do not have a default, and are not initialised on object creation, are assigned a value of `null`.
 
+For all but the simplest models, you'll want to define your own object methods:
+
+```javascript
+class Rectangle extends Model([
+    new fields.ValueField('width', {'default': 800}),
+    new fields.ValueField('height', {'default': 600}),
+]) {
+    getArea() {
+        return this.width * this.height;
+    }
+}
+
+const r = new Rectangle({width: 320, height: 200});
+console.log(r.getArea());  // 64000
+```
+
+This works because `Model` is a function that takes a definition of fields and returns a class.
+
 
 ## Typed fields
 
