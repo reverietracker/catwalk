@@ -1,0 +1,15 @@
+{
+  "name": "roseberry",
+  "version": "1.0.0",
+  "description": "a framework that isn't react",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Matt Westcott",
+  "license": "ISC",
+  "devDependencies": {
+    "docpress": "0.8.2",
+    "jest": "^27.3.1"
+  }
+}
