@@ -56,3 +56,22 @@ test('BooleanField casts to boolean', () => {
     r.isFilled = 0;
     expect(r.isFilled).toBe(false);
 });
+
+
+test('change events on fields are triggered', () => {
+    const r = new TypedRectangle({width: 320, height: 200});
+    let status = 'unchanged';
+    r.on('changeWidth', (newWidth) => {
+        status = 'width changed to ' + newWidth;
+    });
+    r.height = 240;
+    expect(status).toBe('unchanged');
+    r.width = 320;
+    expect(status).toBe('unchanged');
+    r.width = 1001;
+    expect(status).toBe('width changed to 1000');
+
+    status = 'unchanged'
+    r.width = 1000;
+    expect(status).toBe('unchanged');
+});

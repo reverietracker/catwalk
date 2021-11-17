@@ -80,3 +80,25 @@ console.log(r.width);  // 255 - invalid assignments are discarded
 r.isFilled = 'yes indeed';
 console.log(r.isFilled);  // true
 ```
+
+
+## Events
+
+A model is an [event emitter](https://nodejs.org/docs/latest/api/events.html), and every field implements a corresponding 'change' event:
+
+```javascript
+const r = new Rectangle({'width': 320, 'height': 200});
+r.on('changeWidth', (newWidth) => {
+    console.log("Width is now " + newWidth);
+});
+r.width = 400;  // "Width is now 400"
+r.width = 400;  // no output (event is only fired when the value changes)
+```
+
+The event name is formed from the capitalised field name prefixed with 'change'. To use a different name, set the `eventName` option on the field:
+
+```javascript
+const Rectangle = Model([
+    new fields.IntegerField('width', {'min': 1, 'max': 1000, 'eventName': 'resize'}),
+]);
+```
