@@ -30,8 +30,8 @@ Fields can have default values:
 
 ```javascript
 const Rectangle = Model([
-    new fields.ValueField('width', {'default': 800}),
-    new fields.ValueField('height', {'default': 600}),
+    new fields.ValueField('width', {default: 800}),
+    new fields.ValueField('height', {default: 600}),
 ]);
 
 const r = new Rectangle();
@@ -44,8 +44,8 @@ For all but the simplest models, you'll want to define your own object methods:
 
 ```javascript
 class Rectangle extends Model([
-    new fields.ValueField('width', {'default': 800}),
-    new fields.ValueField('height', {'default': 600}),
+    new fields.ValueField('width', {default: 800}),
+    new fields.ValueField('height', {default: 600}),
 ]) {
     getArea() {
         return this.width * this.height;
@@ -65,12 +65,12 @@ This works because `Model` is a function that takes a definition of fields and r
 
 ```javascript
 const Rectangle = Model([
-    new fields.IntegerField('width', {'min': 1, 'max': 1000}),
-    new fields.IntegerField('height', {'min': 1, 'max': 1000}),
-    new fields.BooleanField('isFilled', {'default': false}),
+    new fields.IntegerField('width', {min: 1, max: 1000}),
+    new fields.IntegerField('height', {min: 1, max: 1000}),
+    new fields.BooleanField('isFilled', {default: false}),
 ]);
 
-const r = new Rectangle({'width': 320, 'height': 200});
+const r = new Rectangle({width: 320, height: 200});
 r.width = '0xff';
 console.log(r.width);  // 255
 r.height = 2000;
@@ -87,7 +87,7 @@ console.log(r.isFilled);  // true
 A model is an [event emitter](https://nodejs.org/docs/latest/api/events.html), and every field implements a corresponding 'change' event:
 
 ```javascript
-const r = new Rectangle({'width': 320, 'height': 200});
+const r = new Rectangle({width: 320, height: 200});
 r.on('changeWidth', (newWidth) => {
     console.log("Width is now " + newWidth);
 });
@@ -99,6 +99,6 @@ The event name is formed from the capitalised field name prefixed with 'change'.
 
 ```javascript
 const Rectangle = Model([
-    new fields.IntegerField('width', {'min': 1, 'max': 1000, 'eventName': 'resize'}),
+    new fields.IntegerField('width', {min: 1, max: 1000, eventName: 'resize'}),
 ]);
 ```

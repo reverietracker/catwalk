@@ -1,7 +1,7 @@
 const { Model, fields } = require('../');
 
 class Rectangle extends Model([
-    new fields.ValueField('width', {'default': 300}),
+    new fields.ValueField('width', {default: 300}),
     new fields.ValueField('height'),
 ]) {
     getArea() {
@@ -33,13 +33,13 @@ test('models can have methods', () => {
 
 
 const TypedRectangle = Model([
-    new fields.IntegerField('width', {'min': 1, 'max': 1000}),
-    new fields.IntegerField('height', {'min': 1, 'max': 1000}),
-    new fields.BooleanField('isFilled', {'default': false}),
+    new fields.IntegerField('width', {min: 1, max: 1000}),
+    new fields.IntegerField('height', {min: 1, max: 1000}),
+    new fields.BooleanField('isFilled', {default: false}),
 ]);
 
 test('IntegerField casts to integer', () => {
-    const r = new TypedRectangle({'width': '0xff', 'height': '123'});
+    const r = new TypedRectangle({width: '0xff', height: '123'});
     expect(r.width).toBe(255);
     expect(r.height).toBe(123);
     r.width = 1001;
@@ -51,7 +51,7 @@ test('IntegerField casts to integer', () => {
 });
 
 test('BooleanField casts to boolean', () => {
-    const r = new TypedRectangle({'isFilled': 'yes'});
+    const r = new TypedRectangle({isFilled: 'yes'});
     expect(r.isFilled).toBe(true);
     r.isFilled = 0;
     expect(r.isFilled).toBe(false);
