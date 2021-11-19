@@ -75,3 +75,17 @@ test('change events on fields are triggered', () => {
     r.width = 1000;
     expect(status).toBe('unchanged');
 });
+
+test('objects can be serialised to JSON', () => {
+    const r = new TypedRectangle({width: 320, height: 200});
+    rectJSON = r.toJSON();
+    rectData = JSON.parse(rectJSON);
+    expect(rectData).toStrictEqual({width: 320, height: 200, isFilled: false});
+});
+
+test('objects can be deserialised from JSON', () => {
+    const r = TypedRectangle.fromJSON('{"width": 320, "height": 200}');
+    expect(r).toBeInstanceOf(TypedRectangle);
+    expect(r.width).toBe(320);
+    expect(r.height).toBe(200);
+});

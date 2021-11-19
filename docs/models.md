@@ -102,3 +102,14 @@ const Rectangle = Model([
     new fields.IntegerField('width', {min: 1, max: 1000, eventName: 'resize'}),
 ]);
 ```
+
+
+## JSON serialisation
+
+Models also support being serialised to JSON, via the methods `toData` (which returns a representation of the model consisting of simple JSON-serialisable data types) and `toJSON` (which serialises the model to a JSON string). These representations can be converted back to models via the class methods `fromData` and `fromJSON`.
+
+```javascript
+const r = new Rectangle({width: 320, height: 200});
+const rectJSON = r.toJSON();  // '{"width": 320, "height": 200}'
+const r2 = Rectangle.fromJSON(rectJSON);  // a new Rectangle instance
+```
