@@ -30,7 +30,51 @@ Like other field types, `ListField` implements a change event; event listeners a
 
 ```javascript
 s.on('changeVolume', (i, val) => {
-    console.log('Volume element ' + i + ' is now ' + val);
+    console.log(`Volume element ${i} is now ${val}`);
 });
 s.setVolume(5, 99);  // "Volume element 5 is now 99"
+```
+
+Elements within ListField can be any field type, including ListField itself:
+
+```javascript
+const Sprite = Model([
+    new fields.ListField(
+        'bitmap',
+        new fields.ListField('row', new fields.BooleanField('col'), 8),
+        8,
+        {elementName: 'pixel'}
+    ),
+]);
+
+smiley = new Sprite({
+    'bitmap': [
+        // 0/1 used here for legibility, but these will be cast to true/false by BooleanField
+        [0, 0, 1, 1, 1, 1, 0, 0],
+        [0, 1, 1, 1, 1, 1, 1, 0],
+        [1, 1, 0, 1, 1, 0, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 0, 1, 1, 0, 1, 1],
+        [0, 1, 1, 0, 0, 1, 1, 0],
+        [0, 0, 1, 1, 1, 1, 0, 0],
+    ]
+})
+```
+
+Setting `{elementName: 'pixel'}` in the above definition means that the getter / setter functions will be named `getPixel` and `setPixel`, and the change event will be named `changePixel`. (Otherwise, the name `row` would be used, giving `getRow`, `setRow` and `changeRow`.)
+
+For accessing individual elements, the getter and setter methods generalise to any number of arguments:
+
+```javascript
+console.log(smiley.getPixel(2, 5));  // false - pixel 5 of row 2
+smiley.setPixel(2, 5, true);
+```
+
+Likewise, when a change event is fired, event listeners will be passed as many arguments as required to identify the changed element:
+
+```javascript
+smiley.on('changePixel', (row, col, newVal) => {
+    console.log(`pixel (${row}, ${col}) changed to ${newVal}`);
+});
 ```

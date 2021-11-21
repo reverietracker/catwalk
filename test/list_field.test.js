@@ -37,3 +37,38 @@ test('change events on lists are triggered', () => {
     seq.setElement(2, 6);
     expect(status).toBe('element 2 changed to 6');
 });
+
+class Sprite extends Model([
+    new fields.ListField(
+        'bitmap',
+        new fields.ListField('row', new fields.BooleanField('pixel'), 8),
+        8,
+        {elementName: 'pixel'}
+    ),
+]) {}
+
+test('elements in nested ListFields can be accessed', () => {
+    const s = new Sprite({
+        'bitmap': [
+            [0, 0, 1, 1, 1, 1, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [1, 1, 0, 1, 1, 0, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 0, 1, 1, 0, 1, 1],
+            [0, 1, 1, 0, 0, 1, 1, 0],
+            [0, 0, 1, 1, 1, 1, 0, 0],
+        ]
+    });
+
+    let status = 'unchanged';
+    s.on('changePixel', (y, x, newVal) => {
+        status = `pixel (${x}, ${y}) changed to ${newVal}`;
+    });
+
+    expect(s.getPixel(3, 6)).toBe(true);
+    expect(status).toBe('unchanged');
+    s.setPixel(3, 6, false);
+    expect(s.getPixel(3, 6)).toBe(false);
+    expect(status).toBe('pixel (6, 3) changed to false');
+});

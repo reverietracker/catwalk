@@ -89,7 +89,7 @@ A model is an [event emitter](https://nodejs.org/docs/latest/api/events.html), a
 ```javascript
 const r = new Rectangle({width: 320, height: 200});
 r.on('changeWidth', (newWidth) => {
-    console.log("Width is now " + newWidth);
+    console.log(`Width is now ${newWidth}`);
 });
 r.width = 400;  // "Width is now 400"
 r.width = 400;  // no output (event is only fired when the value changes)
