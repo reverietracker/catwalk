@@ -23,7 +23,7 @@ test('tuple field elements can be set', () => {
     expect(sprite.getPosition(0)).toBe(100);
 });
 
-test('validation is applied when setting list items', () => {
+test('validation is applied when setting tuple items', () => {
     const sprite = new Sprite({'position': [128,88]});
     sprite.setPosition(1, 999);
     expect(sprite.getPosition(1)).toBe(192);
