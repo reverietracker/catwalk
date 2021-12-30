@@ -7,14 +7,18 @@ class BaseModel extends EventEmitter {
         if (!data) data = {};
         super();
         this.constructor._meta.fieldList.forEach((field) => {
-            field.init(this, data);
+            if (field.name in data) {
+                field.set(this, field.clean(data[field.name]));
+            } else {
+                field.set(this, field.getDefault());
+            }
         });
     }
 
     toData() {
         const data = {};
         this.constructor._meta.fieldList.forEach((field) => {
-            field.serialize(this, data);
+            data[field.name] = field.serialize(field.get(this));
         });
         return data;
     }
