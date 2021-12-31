@@ -9,6 +9,11 @@ test('list field items can be retrieved', () => {
     expect(seq.getElement(2)).toBe(5);
 });
 
+test('list fields can be retrieved in full', () => {
+    const seq = new Sequence({'elements': [2, 3, 5, 7, 11]});
+    expect(seq.getElement()).toEqual([2, 3, 5, 7, 11]);
+});
+
 test('list fields get defaults from subfield', () => {
     const seq = new Sequence();
     expect(seq.getElement(2)).toBe(0);
@@ -33,6 +38,8 @@ test('change events on lists are triggered', () => {
         status = 'element ' + index + ' changed to ' + newVal;
     });
     seq.setElement(2, 5);
+    expect(status).toBe('unchanged');
+    seq.setElement(2, 'purple');
     expect(status).toBe('unchanged');
     seq.setElement(2, 6);
     expect(status).toBe('element 2 changed to 6');

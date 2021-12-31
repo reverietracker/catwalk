@@ -40,3 +40,14 @@ test('change events on tuples are triggered', () => {
     sprite.setPosition(0, 100);
     expect(status).toBe('position 0 changed to 100');
 });
+
+test('tuple fields can be serialised', () => {
+    const sprite = new Sprite({'position': [128,88]});
+    const spriteJson = sprite.toJSON();
+    expect(JSON.parse(spriteJson)).toEqual({'position': [128,88]});
+});
+
+test('tuple fields can be deserialised', () => {
+    const sprite = Sprite.fromJSON('{"position": [128,88]}');
+    expect(sprite.getPosition(0)).toBe(128);
+});
