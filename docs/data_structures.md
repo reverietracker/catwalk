@@ -1,5 +1,7 @@
 # Data structures
 
+## ListField
+
 So far, the fields we've looked at only hold single values. We can also store arrays of values using `ListField`:
 
 ```javascript
@@ -78,3 +80,57 @@ smiley.on('changePixel', (row, col, newVal) => {
     console.log(`pixel (${row}, ${col}) changed to ${newVal}`);
 });
 ```
+
+## StructField
+
+A `StructField` allows storing a group of fields, potentially of different types, to be retrieved either as a dictionary or individually. It can also be nested inside ListField (and vice versa):
+
+```javascript
+const { Model, fields } = require('roseberry');
+
+const Polygon = Model([
+    new fields.ListField(
+        'vertices', new fields.StructField('vertex', [
+            new fields.IntegerField('x'),
+            new fields.IntegerField('y'),
+        ]), 3
+    ),
+]);
+
+const p = new Polygon({vertices: [
+    {x: 0, y: 0},
+    {x: 4, y: 0},
+    {x: 0, y: 3},
+]});
+
+console.log(s.getVertex(1));  // {x: 4, y: 0}
+console.log(s.getVertex(1, 'x'));  // 4
+```
+
+## TupleField
+
+`TupleField` is similar to `StructField`, but the sub-fields within it are managed as an array and referenced by index rather than name:
+
+```javascript
+const { Model, fields } = require('roseberry');
+
+const Polygon = Model([
+    new fields.ListField(
+        'vertices', new fields.TupleField('vertex', [
+            new fields.IntegerField('x'),
+            new fields.IntegerField('y'),
+        ]), 3
+    ),
+]);
+
+const p = new Polygon({vertices: [
+    [0, 0],
+    [4, 0],
+    [0, 3],
+]});
+
+console.log(s.getVertex(1));  // [4, 0]
+console.log(s.getVertex(1, 0));  // 4
+```
+
+The sub-fields within a TupleField are assigned names like any other field, but these names are unused and do not need to be unique.
