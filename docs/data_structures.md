@@ -134,3 +134,36 @@ console.log(s.getVertex(1, 0));  // 4
 ```
 
 The sub-fields within a TupleField are assigned names like any other field, but these names are unused and do not need to be unique.
+
+## ModelField
+
+A `ModelField` holds a reference to an instance of a given model.
+
+```javascript
+const { Model, fields } = require('roseberry');
+
+const Polygon = Model([
+    new fields.ListField(
+        'vertices', new fields.TupleField('vertex', [
+            new fields.IntegerField('x'),
+            new fields.IntegerField('y'),
+        ]), 3
+    ),
+]);
+
+const Scene = Model([
+    new fields.ListField(
+        'polygons', new fields.ModelField('polygon', Polygon), 3
+    )
+]);
+
+scene = new Scene({
+    'polygons': [
+        new Polygon({'vertices': [0, 0], [4, 0], [0, 3]}),
+        new Polygon({'vertices': [1, 1], [5, 1], [1, 4]}),
+        new Polygon({'vertices': [2, 2], [6, 2], [2, 5]}),
+    ]
+});
+```
+
+Note: It is possible to create circular references using `ModelField`, but the `toJSON` method has no mechanism to detect these, and serialising them will fail with an infinite recursion.
