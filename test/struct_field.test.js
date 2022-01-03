@@ -9,8 +9,8 @@ class Sprite extends Model([
 
 class Character extends Model([
     new fields.StructField('polygon', [
-        new fields.ListField('vertices', new fields.IntegerField('vertex'), 4),
-        new fields.ListField('edges', new fields.IntegerField('edge'), 4),
+        new fields.ListField('vertices', new fields.IntegerField('vertex'), {length: 4}),
+        new fields.ListField('edges', new fields.IntegerField('edge'), {length: 4}),
     ]),
 ]) {}
 

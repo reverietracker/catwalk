@@ -4,7 +4,7 @@
   "description": "a framework that isn't react",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "author": "Matt Westcott",
   "license": "ISC",

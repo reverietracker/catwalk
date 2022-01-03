@@ -6,7 +6,7 @@ class Artist extends Model([
 }
 
 class Band extends Model([
-    new fields.ListField('members', new fields.ModelField('member', Artist), 4),
+    new fields.ListField('members', new fields.ModelField('member', Artist), {length: 4}),
 ]) {
 }
 

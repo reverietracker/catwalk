@@ -1,7 +1,9 @@
 const { Model, fields } = require('../');
 
 class Sequence extends Model([
-    new fields.ListField('elements', new fields.IntegerField('element', {default: 0, max: 100}), 5),
+    new fields.ListField(
+        'elements', new fields.IntegerField('element', {default: 0, max: 100}), {length: 5}
+    ),
 ]) {}
 
 test('list field items can be retrieved', () => {
@@ -48,9 +50,8 @@ test('change events on lists are triggered', () => {
 class Sprite extends Model([
     new fields.ListField(
         'bitmap',
-        new fields.ListField('row', new fields.BooleanField('pixel'), 8),
-        8,
-        {elementName: 'pixel'}
+        new fields.ListField('row', new fields.BooleanField('pixel'), {length: 8}),
+        {length: 8, elementName: 'pixel'}
     ),
 ]) {}
 
@@ -78,4 +79,39 @@ test('elements in nested ListFields can be accessed', () => {
     s.setPixel(3, 6, false);
     expect(s.getPixel(3, 6)).toBe(false);
     expect(status).toBe('pixel (6, 3) changed to false');
+});
+
+class OneBasedSequence extends Model([
+    new fields.ListField(
+        'elements', new fields.IntegerField('element', {default: 0, max: 100}), {startIndex: 1, endIndex: 6}
+    ),
+]) {}
+
+test('items can be retrieved from non-zero-based lists', () => {
+    const seq = new OneBasedSequence({elements: [null, 2, 3, 5, 7, 11]});
+    expect(seq.getElement(3)).toBe(5);
+});
+
+test('non-zero-based lists can be retrieved in full', () => {
+    seqJson = '{"elements": [2, 3, 5, 7, 11]}';
+    const seq = OneBasedSequence.fromJSON(seqJson);
+    expect(seq.getElement()).toEqual([undefined, 2, 3, 5, 7, 11]);
+});
+
+test('non-zero-based lists can be serialised and deserialised', () => {
+    seqJson = '{"elements": [2, 3, 5, 7, 11]}';
+    const seq = OneBasedSequence.fromJSON(seqJson);
+    expect(seq.getElement(3)).toBe(5);
+    seqJsonOut = seq.toJSON();
+    expect(JSON.parse(seqJsonOut)).toEqual(JSON.parse(seqJson));
+});
+
+test('endIndex or length must be specified', () => {
+    expect(() => {
+        class InvalidSequence extends Model([
+            new fields.ListField(
+                'elements', new fields.IntegerField('element', {default: 0, max: 100}), {startIndex: 1}
+            ),
+        ]) {}
+    }).toThrow('either length or endIndex must be specified')
 });

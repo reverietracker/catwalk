@@ -9,16 +9,37 @@ const { Model, fields } = require('roseberry');
 
 const Sample = Model([
     new fields.ListField(
-        'volumes', new fields.IntegerField('volume', {default: 0, max: 255}), 8
+        'volumes', new fields.IntegerField('volume', {default: 0, max: 255}), {length: 8}
     ),
 ]);
 
 const s = new Sample({volumes: [1, 2, 4, 8, 12, 24, 48, 96]});
 ```
 
-Arrays defined with `ListField` are fixed length; the second parameter gives the type of an element, and the third parameter gives the array length.
+All elements of the array are of the same type (given by the second parameter), and arrays are fixed length as determined by the options dictionary (the third parameter). The following options are recognised:
 
-Using standard array notation to access array elements (e.g. `s.volumes[2]`) will work, but this will bypass any validation checks. Instead, you should use the methods `getVolume` and `setVolume`; these methods are defined automatically based on the field name for an individual element ('volume' here).
+`startIndex`
+: The number that array indexes should start from (default: 0).
+
+`length`
+: The array length.
+
+`endIndex`
+: One greater than the maximum valid array index. Either `length` or `endIndex` must be specified.
+
+`elementName`
+: Name used for accessor methods; defaults to the field name of the subfield (`volume` in the example above).
+
+`getterName`
+: Name of the getter method; defaults to `get` plus the capitalised version of `elementName` (e.g. `getVolume`).
+
+`setterName`
+: Name of the setter method; defaults to `set` plus the capitalised version of `elementName` (e.g. `setVolume`).
+
+`eventName`
+: Name of the event fired on change; defaults to `change` plus the capitalised version of `elementName` (e.g. `changeVolume`).
+
+Using standard array notation to access array elements (e.g. `s.volumes[2]`) will work, but this will bypass any validation checks and event handlers. Instead, you should use the methods `getVolume` and `setVolume`; these methods are defined automatically based on the field name for an individual element ('volume' here).
 
 ```javascript
 console.log(s.getVolume(5));  // 24
@@ -43,8 +64,8 @@ Elements within ListField can be any field type, including ListField itself:
 const Sprite = Model([
     new fields.ListField(
         'bitmap',
-        new fields.ListField('row', new fields.BooleanField('col'), 8),
-        8,
+        new fields.ListField('row', new fields.BooleanField('col'), {length: 8}),
+        {length: 8},
         {elementName: 'pixel'}
     ),
 ]);
@@ -81,6 +102,21 @@ smiley.on('changePixel', (row, col, newVal) => {
 });
 ```
 
+Non-zero-based lists are serialised to an array consisting of just the range of valid elements, but in all other contexts (e.g. when passing an initial value to the model's constructor, or retrieving the full list through the getter method) the value is padded with initial `undefined` values to give the correct indexes.
+
+```javascript
+
+const Sample = Model([
+    new fields.ListField(
+        'volumes', new fields.IntegerField('volume'), {startIndex: 1, length: 8}
+    ),
+]);
+
+const s = new Sample({volumes: [undefined, 1, 2, 4, 8, 12, 24, 48, 96]});
+s.toJSON();  // '{"volumes": [1, 2, 4, 8, 12, 24, 48, 96]}'
+s.getVolume();  // [undefined, 1, 2, 4, 8, 12, 24, 48, 96]
+```
+
 ## StructField
 
 A `StructField` allows storing a group of fields, potentially of different types, to be retrieved either as a dictionary or individually. It can also be nested inside ListField (and vice versa):
@@ -93,7 +129,7 @@ const Polygon = Model([
         'vertices', new fields.StructField('vertex', [
             new fields.IntegerField('x'),
             new fields.IntegerField('y'),
-        ]), 3
+        ]), {length: 3}
     ),
 ]);
 
@@ -119,7 +155,7 @@ const Polygon = Model([
         'vertices', new fields.TupleField('vertex', [
             new fields.IntegerField('x'),
             new fields.IntegerField('y'),
-        ]), 3
+        ]), {length: 3}
     ),
 ]);
 
@@ -147,13 +183,13 @@ const Polygon = Model([
         'vertices', new fields.TupleField('vertex', [
             new fields.IntegerField('x'),
             new fields.IntegerField('y'),
-        ]), 3
+        ]), {length: 3}
     ),
 ]);
 
 const Scene = Model([
     new fields.ListField(
-        'polygons', new fields.ModelField('polygon', Polygon), 3
+        'polygons', new fields.ModelField('polygon', Polygon), {length: 3}
     )
 ]);
 
