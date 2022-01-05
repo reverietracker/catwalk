@@ -9,7 +9,7 @@ const Rectangle = Model([
 ]);
 ```
 
-the `ValueField` (or `IntegerField`, `ListField` and so on) instances that form the definition are stored in the model class's `_meta` property - for example, `Rectangle._meta.fields.width`. These field objects manage the setting and retrieval of a model's field data, and provide the following attributes and methods:
+the `ValueField` (or `IntegerField`, `ListField` and so on) instances that form the definition are stored in the model class's `fields` property - for example, `Rectangle.fields.width`. These field objects manage the setting and retrieval of a model's field data, and provide the following attributes and methods:
 
 `name`
 : The field name.

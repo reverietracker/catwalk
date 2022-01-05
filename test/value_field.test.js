@@ -31,6 +31,10 @@ test('models can have methods', () => {
     expect(r.getArea()).toBe(64000);
 });
 
+test('model fields have labels', () => {
+    expect(Rectangle.fields.width.label).toEqual('Width');
+});
+
 
 const TypedRectangle = Model([
     new fields.IntegerField('width', {min: 1, max: 1000}),

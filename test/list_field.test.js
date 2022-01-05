@@ -33,6 +33,11 @@ test('validation is applied when setting list items', () => {
     expect(seq.getElement(2)).toBe(100);
 });
 
+test('not-long-enough lists are padded with default values', () => {
+    const seq = new Sequence({'elements': [1, 2, 3]});
+    expect(seq.getElement()).toEqual([1, 2, 3, 0, 0]);
+});
+
 test('change events on lists are triggered', () => {
     const seq = new Sequence({'elements': [2, 3, 5, 7, 11]});
     let status = 'unchanged';

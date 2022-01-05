@@ -6,7 +6,7 @@ class BaseModel extends EventEmitter {
     constructor(data) {
         if (!data) data = {};
         super();
-        this.constructor._meta.fieldList.forEach((field) => {
+        this.constructor.fieldList.forEach((field) => {
             if (field.name in data) {
                 field.set(this, field.clean(data[field.name]));
             } else {
@@ -17,7 +17,7 @@ class BaseModel extends EventEmitter {
 
     toData() {
         const data = {};
-        this.constructor._meta.fieldList.forEach((field) => {
+        this.constructor.fieldList.forEach((field) => {
             data[field.name] = field.serialize(field.get(this));
         });
         return data;
@@ -29,7 +29,7 @@ class BaseModel extends EventEmitter {
 
     static fromData(data) {
         const constructorArgs = {};
-        this._meta.fieldList.forEach((field) => {
+        this.fieldList.forEach((field) => {
             if (field.name in data) {
                 constructorArgs[field.name] = field.deserialize(data[field.name]);
             }
@@ -45,13 +45,11 @@ class BaseModel extends EventEmitter {
 
 function Model(fields) {
     let cls = class extends BaseModel {};
-    cls._meta = {
-        fieldList: fields,
-        fields: {},
-    }
+    cls.fieldList = fields;
+    cls.fields = {};
 
     fields.forEach((field) => {
-        cls._meta.fields[field.name] = field;
+        cls.fields[field.name] = field;
         field.contributeToClass(cls);
     });
 
