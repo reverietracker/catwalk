@@ -5,7 +5,7 @@
 So far, the fields we've looked at only hold single values. We can also store arrays of values using `ListField`:
 
 ```javascript
-const { Model, fields } = require('roseberry');
+const { Model, fields } = require('catwalk');
 
 const Sample = Model([
     new fields.ListField(
@@ -122,7 +122,7 @@ s.getVolume();  // [undefined, 1, 2, 4, 8, 12, 24, 48, 96]
 A `StructField` allows storing a group of fields, potentially of different types, to be retrieved either as a dictionary or individually. It can also be nested inside ListField (and vice versa):
 
 ```javascript
-const { Model, fields } = require('roseberry');
+const { Model, fields } = require('catwalk');
 
 const Polygon = Model([
     new fields.ListField(
@@ -148,7 +148,7 @@ console.log(s.getVertex(1, 'x'));  // 4
 `TupleField` is similar to `StructField`, but the sub-fields within it are managed as an array and referenced by index rather than name:
 
 ```javascript
-const { Model, fields } = require('roseberry');
+const { Model, fields } = require('catwalk');
 
 const Polygon = Model([
     new fields.ListField(
@@ -176,7 +176,7 @@ The sub-fields within a TupleField are assigned names like any other field, but 
 A `ModelField` holds a reference to an instance of a given model.
 
 ```javascript
-const { Model, fields } = require('roseberry');
+const { Model, fields } = require('catwalk');
 
 const Polygon = Model([
     new fields.ListField(

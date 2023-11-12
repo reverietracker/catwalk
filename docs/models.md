@@ -13,10 +13,10 @@ class Rectangle {
 const r = new Rectangle({width: 320, height: 200});
 ```
 
-could be rewritten as a roseberry model like this:
+could be rewritten as a Catwalk model like this:
 
 ```javascript
-const { Model, fields } = require('roseberry');
+const { Model, fields } = require('catwalk');
 
 const Rectangle = Model([
     new fields.ValueField('width'),

@@ -1,6 +1,6 @@
 # Documentation
 
-* [roseberry](../README.md)
+* [Catwalk](../README.md)
 * [Models](models.md)
 * [Data structures](data_structures.md)
 * [Field API](field_api.md)
