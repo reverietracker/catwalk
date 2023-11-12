@@ -9,7 +9,7 @@
   "author": "Matt Westcott",
   "license": "ISC",
   "devDependencies": {
-    "docpress": "0.8.2",
-    "jest": "^27.3.1"
+    "docpress": "^0.8.2",
+    "jest": "^29.7.0"
   }
 }
