@@ -27,6 +27,9 @@ All elements of the array are of the same type (given by the second parameter), 
 `endIndex`
 : One greater than the maximum valid array index. Either `length` or `endIndex` must be specified.
 
+`default`
+: An array to use as the default value for the array. If not specified, each element of the array will be initialised to the value specified within the element type.
+
 `elementName`
 : Name used for accessor methods; defaults to the field name of the subfield (`volume` in the example above).
 

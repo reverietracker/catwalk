@@ -6,6 +6,14 @@ class Sequence extends Model([
     ),
 ]) {}
 
+class DefaultSequence extends Model([
+    new fields.ListField(
+        'elements',
+        new fields.IntegerField('element', {default: 0, max: 100}),
+        {length: 5, default: [2, 3, 5, 7, 11]},
+    ),
+]) {}
+
 test('list field items can be retrieved', () => {
     const seq = new Sequence({'elements': [2, 3, 5, 7, 11]});
     expect(seq.getElement(2)).toBe(5);
@@ -19,6 +27,11 @@ test('list fields can be retrieved in full', () => {
 test('list fields get defaults from subfield', () => {
     const seq = new Sequence();
     expect(seq.getElement(2)).toBe(0);
+});
+
+test('list fields get defaults from list field', () => {
+    const seq = new DefaultSequence();
+    expect(seq.getElement()).toEqual([2, 3, 5, 7, 11]);
 });
 
 test('list field items can be set', () => {
