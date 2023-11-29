@@ -1,6 +1,26 @@
 # Catwalk
 
-`catwalk` is a framework for JavaScript web apps that need to present a UI for managing complex structured data.
+Catwalk is a framework for JavaScript web apps that need to present a UI for managing complex structured data.
+
+The `catwalk` package provides the model layer of the framework. In Catwalk, a model is a JavaScript class with a set of fields defined on it, which may be simple values such as strings or integers, or data structures such as arrays. Fields can have validation applied, and model state can be serialised and deserialised to and from JSON. Most importantly, each field provides a 'change' event that a UI component can listen to, allowing the UI to be efficiently kept in sync with the model.
+
+## A simple example
+
+```javascript
+class Rectangle extends Model([
+    new fields.IntegerField('width', {min: 1, max: 1000}),
+    new fields.IntegerField('height', {min: 1, max: 1000}),
+    new fields.ValueField('color'),
+]) {
+    getArea() {
+        return this.width * this.height;
+    }
+}
+
+const rect = new Rectangle({width: 320, height: 200, color: 'red'});
+rect.on('changeWidth', (w) => console.log('width is now', w));
+rect.width = 640;
+```
 
 ## Why not React?
 
