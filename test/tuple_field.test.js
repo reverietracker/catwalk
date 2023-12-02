@@ -41,6 +41,18 @@ test('change events on tuples are triggered', () => {
     expect(status).toBe('position 0 changed to 100');
 });
 
+test('model-wide change events on tuples are triggered', () => {
+    const sprite = new Sprite({'position': [128,88]});
+    let status = 'unchanged';
+    sprite.on('change', (fieldName, index, newVal) => {
+        status = fieldName + ' ' + index + ' changed to ' + newVal;
+    });
+    sprite.setPosition(0, 128);
+    expect(status).toBe('unchanged');
+    sprite.setPosition(0, 100);
+    expect(status).toBe('position 0 changed to 100');
+});
+
 test('tuple fields can be serialised', () => {
     const sprite = new Sprite({'position': [128,88]});
     const spriteJson = sprite.toJSON();

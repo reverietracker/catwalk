@@ -60,6 +60,20 @@ test('change events on structs are triggered', () => {
     expect(status).toBe('position x changed to 100');
 });
 
+test('model-wide change events on structs are triggered', () => {
+    const sprite = new Sprite({'position': {'x': 128, 'y': 88}});
+    let status = 'unchanged';
+    sprite.on('change', (fieldName, index, newVal) => {
+        status = fieldName + ' ' + index + ' changed to ' + newVal;
+    });
+    sprite.setPosition('x', 128);
+    expect(status).toBe('unchanged');
+    sprite.setPosition('x', 'purple');
+    expect(status).toBe('unchanged');
+    sprite.setPosition('x', 100);
+    expect(status).toBe('position x changed to 100');
+});
+
 test('struct fields can be serialised', () => {
     const sprite = new Sprite({'position': {'x': 128, 'y': 88}});
     const spriteJson = sprite.toJSON();

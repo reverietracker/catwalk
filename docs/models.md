@@ -103,6 +103,16 @@ const Rectangle = Model([
 ]);
 ```
 
+Models also implement a model-wide 'change' event, which is fired whenever any field changes:
+
+```javascript
+const r = new Rectangle({width: 320, height: 200});
+r.on('change', (fieldName, newValue) => {
+    console.log(`${fieldName} is now ${newValue}`);
+});
+r.width = 400;  // "width is now 400"
+r.height = 300;  // "height is now 300"
+```
 
 ## JSON serialisation
 

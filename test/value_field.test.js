@@ -80,6 +80,24 @@ test('change events on fields are triggered', () => {
     expect(status).toBe('unchanged');
 });
 
+test('model-wide change events on fields are triggered', () => {
+    const r = new TypedRectangle({width: 320, height: 200});
+    let status = 'unchanged';
+    r.on('change', (fieldName, newWidth) => {
+        status = fieldName + ' changed to ' + newWidth;
+    });
+    r.width = 320;
+    expect(status).toBe('unchanged');
+    r.width = 1001;
+    expect(status).toBe('width changed to 1000');
+    r.height = 240;
+    expect(status).toBe('height changed to 240');
+
+    status = 'unchanged'
+    r.width = 1000;
+    expect(status).toBe('unchanged');
+});
+
 test('objects can be serialised to JSON', () => {
     const r = new TypedRectangle({width: 320, height: 200});
     rectJSON = r.toJSON();

@@ -65,6 +65,20 @@ test('change events on lists are triggered', () => {
     expect(status).toBe('element 2 changed to 6');
 });
 
+test('model-wide change events on lists are triggered', () => {
+    const seq = new Sequence({'elements': [2, 3, 5, 7, 11]});
+    let status = 'unchanged';
+    seq.on('change', (fieldName, index, newVal) => {
+        status = fieldName + ' ' + index + ' changed to ' + newVal;
+    });
+    seq.setElement(2, 5);
+    expect(status).toBe('unchanged');
+    seq.setElement(2, 'purple');
+    expect(status).toBe('unchanged');
+    seq.setElement(2, 6);
+    expect(status).toBe('elements 2 changed to 6');
+});
+
 class Sprite extends Model([
     new fields.ListField(
         'bitmap',
