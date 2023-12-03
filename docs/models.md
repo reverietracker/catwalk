@@ -81,6 +81,26 @@ r.isFilled = 'yes indeed';
 console.log(r.isFilled);  // true
 ```
 
+`EnumField` takes a `choices` option consisting of a list of [value, label] pairs, and validates that any value assigned to it is one of the values in the list. The field's value is the value of the selected choice, not the label.
+
+```javascript
+const Rectangle = Model([
+    new fields.EnumField('color', {
+        choices: [
+            ['red', 'Red'],
+            ['green', 'Green'],
+            ['blue', 'Blue'],
+        ],
+    }),
+    /* ... */
+]);
+
+const r = new Rectangle();
+r.color = 'green';
+console.log(r.color);  // 'green'
+r.color = 'yellow';
+console.log(r.color);  // 'green' - invalid assignments are discarded
+```
 
 ## Events
 

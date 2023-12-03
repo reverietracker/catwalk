@@ -40,6 +40,14 @@ const TypedRectangle = Model([
     new fields.IntegerField('width', {min: 1, max: 1000}),
     new fields.IntegerField('height', {min: 1, max: 1000}),
     new fields.BooleanField('isFilled', {default: false}),
+    new fields.EnumField('color', {
+        choices: [
+            ['ff0000', 'red'],
+            ['00ff00', 'green'],
+            ['0000ff', 'blue'],
+        ],
+        default: 'ff0000'
+    }),
 ]);
 
 test('IntegerField casts to integer', () => {
@@ -61,6 +69,12 @@ test('BooleanField casts to boolean', () => {
     expect(r.isFilled).toBe(false);
 });
 
+test('EnumField validates values', () => {
+    const r = new TypedRectangle({color: '00ff00'});
+    expect(r.color).toBe('00ff00');
+    r.color = 'purple';
+    expect(r.color).toBe('00ff00');
+});
 
 test('change events on fields are triggered', () => {
     const r = new TypedRectangle({width: 320, height: 200});
@@ -102,7 +116,7 @@ test('objects can be serialised to JSON', () => {
     const r = new TypedRectangle({width: 320, height: 200});
     rectJSON = r.toJSON();
     rectData = JSON.parse(rectJSON);
-    expect(rectData).toStrictEqual({width: 320, height: 200, isFilled: false});
+    expect(rectData).toStrictEqual({width: 320, height: 200, isFilled: false, color: 'ff0000'});
 });
 
 test('objects can be deserialised from JSON', () => {
