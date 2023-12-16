@@ -76,6 +76,20 @@ test('EnumField validates values', () => {
     expect(r.color).toBe('00ff00');
 });
 
+class Wave extends Model([
+    new fields.EnumField('waveType', {choices: [
+        [1, "Square"],
+        [2, "Triangle"],
+        [3, "Sine"],
+    ], default: 1}),
+]) {}
+
+test('EnumField casts to integer', () => {
+    const w = new Wave();
+    w.waveType = '2';
+    expect(w.waveType).toBe(2);
+});
+
 test('change events on fields are triggered', () => {
     const r = new TypedRectangle({width: 320, height: 200});
     let status = 'unchanged';
