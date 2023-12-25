@@ -38,7 +38,7 @@ test('model fields have labels', () => {
 
 const TypedRectangle = Model([
     new fields.IntegerField('width', {min: 1, max: 1000}),
-    new fields.IntegerField('height', {min: 1, max: 1000}),
+    new fields.NumberField('height', {min: 1, max: 1000}),
     new fields.BooleanField('isFilled', {default: false}),
     new fields.EnumField('color', {
         choices: [
@@ -53,13 +53,27 @@ const TypedRectangle = Model([
 test('IntegerField casts to integer', () => {
     const r = new TypedRectangle({width: '0xff', height: '123'});
     expect(r.width).toBe(255);
-    expect(r.height).toBe(123);
     r.width = 1001;
     expect(r.width).toBe(1000);
     r.width = 0;
     expect(r.width).toBe(1);
-    r.height = 'too big';
+    r.width = 50.75;
+    expect(r.width).toBe(50);
+    r.width = 'too big';
+    expect(r.width).toBe(50);
+});
+
+test('NumberField casts to float', () => {
+    const r = new TypedRectangle({width: '0xff', height: '123'});
     expect(r.height).toBe(123);
+    r.height = 1001;
+    expect(r.height).toBe(1000);
+    r.height = 0;
+    expect(r.height).toBe(1);
+    r.height = 50.75;
+    expect(r.height).toBe(50.75);
+    r.height = 'too big';
+    expect(r.height).toBe(50.75);
 });
 
 test('BooleanField casts to boolean', () => {

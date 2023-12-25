@@ -61,7 +61,7 @@ This works because `Model` is a function that takes a definition of fields and r
 
 ## Typed fields
 
-`IntegerField` and `BooleanField` cast any values assigned to them as integers or booleans respectively. Additionally, `IntegerField` allows specifying a minimum and/or maximum value; values outside this range are clamped.
+`NumberField`, `IntegerField` and `BooleanField` cast any values assigned to them as floats, integers or booleans respectively. Additionally, `NumberField` and `IntegerField` allow specifying a minimum and/or maximum value; values outside this range are clamped.
 
 ```javascript
 const Rectangle = Model([
@@ -75,6 +75,8 @@ r.width = '0xff';
 console.log(r.width);  // 255
 r.height = 2000;
 console.log(r.height);  // 1000
+r.height = 123.5;
+console.log(r.height);  // 123
 r.width = 'enormous';
 console.log(r.width);  // 255 - invalid assignments are discarded
 r.isFilled = 'yes indeed';
