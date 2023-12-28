@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/style.css?t=90051322">
+    <script src="assets/script.js?t=93f1a66c"></script>
+    <title>Models - Catwalk</title>
+    <meta name="viewport" content="width=device-width">
+  </head>
+  <body class="-menu-visible">
+    <div class="doc-layout">
+      <div class="toggle menu-toggle js-menu-toggle"></div>
+      <div class="menu toc-menu">
+        <ul>
+          <li class="menu-item -level-0 -parent">
+            <ul class="submenu">
+              <li class="menu-item -level-1"><a class="link title  link-index" href="index.html">Catwalk</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title -active link-models" href="models.html">Models</a>
+                <ul class="headings heading-list">
+                  <li class="heading-item -depth-2"><a class="hlink link-typed-fields" href="#typed-fields">Typed fields</a>
+                  </li>
+                  <li class="heading-item -depth-2"><a class="hlink link-events" href="#events">Events</a>
+                  </li>
+                  <li class="heading-item -depth-2"><a class="hlink link-json-serialisation" href="#json-serialisation">JSON serialisation</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-data_structures" href="data_structures.html">Data structures</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-field_api" href="field_api.html">Field API</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="body page-models">
+        <div class="header-nav">
+          <div class="right">
+          </div>
+        </div>
+        <div class="markdown-body"><h1 id="models">Models</h1>
+<p>A model is a JavaScript class with a set of predefined properties (&apos;fields&apos;), defined through a data definition language rather than explicitly through code. For example, a class definition:</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="pl-k">class</span> <span class="pl-ent">Rectangle</span> </span>{
+    <span class="pl-k">constructor</span>({width, height}) {
+        <span class="pl-k">this</span>.width = width;
+        <span class="pl-k">this</span>.height = height;
+    }
+}
+
+<span class="pl-k">const</span> r = <span class="pl-k">new</span> Rectangle({<span class="hljs-attr">width</span>: <span class="hljs-number">320</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>});
+</code></pre>
+<p>could be rewritten as a Catwalk model like this:</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> { Model, fields } = <span class="pl-c1">require</span>(<span class="pl-s">&apos;catwalk&apos;</span>);
+
+<span class="pl-k">const</span> Rectangle = Model([
+    <span class="pl-k">new</span> fields.ValueField(<span class="pl-s">&apos;width&apos;</span>),
+    <span class="pl-k">new</span> fields.ValueField(<span class="pl-s">&apos;height&apos;</span>),
+]);
+
+<span class="pl-k">const</span> r = <span class="pl-k">new</span> Rectangle({<span class="hljs-attr">width</span>: <span class="hljs-number">320</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>});
+</code></pre>
+<p>Fields can have default values:</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> Rectangle = Model([
+    <span class="pl-k">new</span> fields.ValueField(<span class="pl-s">&apos;width&apos;</span>, {<span class="hljs-attr">default</span>: <span class="hljs-number">800</span>}),
+    <span class="pl-k">new</span> fields.ValueField(<span class="pl-s">&apos;height&apos;</span>, {<span class="hljs-attr">default</span>: <span class="hljs-number">600</span>}),
+]);
+
+<span class="pl-k">const</span> r = <span class="pl-k">new</span> Rectangle();
+<span class="pl-c1">console</span>.log(r.width);  <span class="pl-c">// 800</span>
+</code></pre>
+<p>Fields which do not have a default, and are not initialised on object creation, are assigned a value of <code>null</code>.</p>
+<p>For all but the simplest models, you&apos;ll want to define your own object methods:</p>
+<pre><code class="lang-javascript">class Rectangle extends Model([
+    new fields.ValueField(&apos;width&apos;, {default: 800}),
+    new fields.ValueField(&apos;height&apos;, {default: 600}),
+]) {
+    getArea() {
+        return this.width * this.height;
+    }
+}
+
+const r = new Rectangle({width: 320, height: 200});
+console.log(r.getArea());  // 64000
+</code></pre>
+<p>This works because <code>Model</code> is a function that takes a definition of fields and returns a class.</p>
+<h2 id="typed-fields">Typed fields</h2>
+<p><code>NumberField</code>, <code>IntegerField</code> and <code>BooleanField</code> cast any values assigned to them as floats, integers or booleans respectively. Additionally, <code>NumberField</code> and <code>IntegerField</code> allow specifying a minimum and/or maximum value; values outside this range are clamped.</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> Rectangle = Model([
+    <span class="pl-k">new</span> fields.IntegerField(<span class="pl-s">&apos;width&apos;</span>, {<span class="hljs-attr">min</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">max</span>: <span class="hljs-number">1000</span>}),
+    <span class="pl-k">new</span> fields.IntegerField(<span class="pl-s">&apos;height&apos;</span>, {<span class="hljs-attr">min</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">max</span>: <span class="hljs-number">1000</span>}),
+    <span class="pl-k">new</span> fields.BooleanField(<span class="pl-s">&apos;isFilled&apos;</span>, {<span class="hljs-attr">default</span>: <span class="pl-c1">false</span>}),
+]);
+
+<span class="pl-k">const</span> r = <span class="pl-k">new</span> Rectangle({<span class="hljs-attr">width</span>: <span class="hljs-number">320</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>});
+r.width = <span class="pl-s">&apos;0xff&apos;</span>;
+<span class="pl-c1">console</span>.log(r.width);  <span class="pl-c">// 255</span>
+r.height = <span class="hljs-number">2000</span>;
+<span class="pl-c1">console</span>.log(r.height);  <span class="pl-c">// 1000</span>
+r.height = <span class="hljs-number">123.5</span>;
+<span class="pl-c1">console</span>.log(r.height);  <span class="pl-c">// 123</span>
+r.width = <span class="pl-s">&apos;enormous&apos;</span>;
+<span class="pl-c1">console</span>.log(r.width);  <span class="pl-c">// 255 - invalid assignments are discarded</span>
+r.isFilled = <span class="pl-s">&apos;yes indeed&apos;</span>;
+<span class="pl-c1">console</span>.log(r.isFilled);  <span class="pl-c">// true</span>
+</code></pre>
+<p><code>EnumField</code> takes a <code>choices</code> option consisting of a list of [value, label] pairs, and validates that any value assigned to it is one of the values in the list. The field&apos;s value is the value of the selected choice, not the label.</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> Rectangle = Model([
+    <span class="pl-k">new</span> fields.EnumField(<span class="pl-s">&apos;color&apos;</span>, {
+        <span class="hljs-attr">choices</span>: [
+            [<span class="pl-s">&apos;red&apos;</span>, <span class="pl-s">&apos;Red&apos;</span>],
+            [<span class="pl-s">&apos;green&apos;</span>, <span class="pl-s">&apos;Green&apos;</span>],
+            [<span class="pl-s">&apos;blue&apos;</span>, <span class="pl-s">&apos;Blue&apos;</span>],
+        ],
+    }),
+    <span class="pl-c">/* ... */</span>
+]);
+
+<span class="pl-k">const</span> r = <span class="pl-k">new</span> Rectangle();
+r.color = <span class="pl-s">&apos;green&apos;</span>;
+<span class="pl-c1">console</span>.log(r.color);  <span class="pl-c">// &apos;green&apos;</span>
+r.color = <span class="pl-s">&apos;yellow&apos;</span>;
+<span class="pl-c1">console</span>.log(r.color);  <span class="pl-c">// &apos;green&apos; - invalid assignments are discarded</span>
+</code></pre>
+<h2 id="events">Events</h2>
+<p>A model is an <a href="https://nodejs.org/docs/latest/api/events.html">event emitter</a>, and every field implements a corresponding &apos;change&apos; event:</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> r = <span class="pl-k">new</span> Rectangle({<span class="hljs-attr">width</span>: <span class="hljs-number">320</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>});
+r.on(<span class="pl-s">&apos;changeWidth&apos;</span>, (newWidth) =&gt; {
+    <span class="pl-c1">console</span>.log(<span class="pl-s">`Width is now <span class="hljs-subst">${newWidth}</span>`</span>);
+});
+r.width = <span class="hljs-number">400</span>;  <span class="pl-c">// &quot;Width is now 400&quot;</span>
+r.width = <span class="hljs-number">400</span>;  <span class="pl-c">// no output (event is only fired when the value changes)</span>
+</code></pre>
+<p>The event name is formed from the capitalised field name prefixed with &apos;change&apos;. To use a different name, set the <code>eventName</code> option on the field:</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> Rectangle = Model([
+    <span class="pl-k">new</span> fields.IntegerField(<span class="pl-s">&apos;width&apos;</span>, {<span class="hljs-attr">min</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">max</span>: <span class="hljs-number">1000</span>, <span class="hljs-attr">eventName</span>: <span class="pl-s">&apos;resize&apos;</span>}),
+]);
+</code></pre>
+<p>Models also implement a model-wide &apos;change&apos; event, which is fired whenever any field changes:</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> r = <span class="pl-k">new</span> Rectangle({<span class="hljs-attr">width</span>: <span class="hljs-number">320</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>});
+r.on(<span class="pl-s">&apos;change&apos;</span>, (fieldName, newValue) =&gt; {
+    <span class="pl-c1">console</span>.log(<span class="pl-s">`<span class="hljs-subst">${fieldName}</span> is now <span class="hljs-subst">${newValue}</span>`</span>);
+});
+r.width = <span class="hljs-number">400</span>;  <span class="pl-c">// &quot;width is now 400&quot;</span>
+r.height = <span class="hljs-number">300</span>;  <span class="pl-c">// &quot;height is now 300&quot;</span>
+</code></pre>
+<h2 id="json-serialisation">JSON serialisation</h2>
+<p>Models also support being serialised to JSON, via the methods <code>toData</code> (which returns a representation of the model consisting of simple JSON-serialisable data types) and <code>toJSON</code> (which serialises the model to a JSON string). These representations can be converted back to models via the class methods <code>fromData</code> and <code>fromJSON</code>.</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> r = <span class="pl-k">new</span> Rectangle({<span class="hljs-attr">width</span>: <span class="hljs-number">320</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>});
+<span class="pl-k">const</span> rectJSON = r.toJSON();  <span class="pl-c">// &apos;{&quot;width&quot;: 320, &quot;height&quot;: 200}&apos;</span>
+<span class="pl-k">const</span> r2 = Rectangle.fromJSON(rectJSON);  <span class="pl-c">// a new Rectangle instance</span>
+</code></pre>
+
+        </div>
+        <div class="footer-nav">
+          <div class="left"><a href="index.html"><span class="title">Catwalk</span></a></div>
+          <div class="right"><a href="data_structures.html"><span class="label">Next: </span><span class="title">Data structures</span></a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

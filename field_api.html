@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/style.css?t=90051322">
+    <script src="assets/script.js?t=93f1a66c"></script>
+    <title>Field API - Catwalk</title>
+    <meta name="viewport" content="width=device-width">
+  </head>
+  <body class="-menu-visible">
+    <div class="doc-layout">
+      <div class="toggle menu-toggle js-menu-toggle"></div>
+      <div class="menu toc-menu">
+        <ul>
+          <li class="menu-item -level-0 -parent">
+            <ul class="submenu">
+              <li class="menu-item -level-1"><a class="link title  link-index" href="index.html">Catwalk</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-models" href="models.html">Models</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-data_structures" href="data_structures.html">Data structures</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title -active link-field_api" href="field_api.html">Field API</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="body page-field_api">
+        <div class="header-nav">
+          <div class="right">
+          </div>
+        </div>
+        <div class="markdown-body"><h1 id="catwalk-internals-field-api">Catwalk internals - Field API</h1>
+<p>In a model definition such as:</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> Rectangle = Model([
+    <span class="pl-k">new</span> fields.ValueField(<span class="pl-s">&apos;width&apos;</span>),
+    <span class="pl-k">new</span> fields.ValueField(<span class="pl-s">&apos;height&apos;</span>),
+]);
+</code></pre>
+<p>the <code>ValueField</code> (or <code>IntegerField</code>, <code>ListField</code> and so on) instances that form the definition are stored in the model class&apos;s <code>fields</code> property - for example, <code>Rectangle.fields.width</code>. These field objects manage the setting and retrieval of a model&apos;s field data, and provide the following attributes and methods:</p>
+<p><code>name</code>
+: The field name.</p>
+<p><code>contributeToClass(cls)</code>
+: Called once when the model class is defined to allow the field to define any accessors on the model (such as <code>getFoo</code> methods).</p>
+<p><code>set(instance, val)</code>
+: Set the value of the field on the model instance <code>instance</code> to <code>val</code>.</p>
+<p><code>get(instance)</code>
+: Return the value of the field on the model instance <code>instance</code>.</p>
+<p><code>getDefault()</code>
+: Return the field&apos;s default value, used when the field is omitted from the dictionary used when creating a model instance.</p>
+<p><code>clean(val)</code>
+: Validates that <code>val</code> is an accepted value for this field, either returning a valid final value to use or throwing a <code>ValidationError</code>.</p>
+<p><code>serialize(val)</code>
+: Convert <code>val</code> (a valid value for this field) into data that can be serialised to JSON.</p>
+<p><code>deserialize(val)</code>
+: Convert <code>val</code> (a value as returned from <code>serialize</code>) to a valid value for this field.</p>
+<p><code>getElement(obj, keys)</code>
+: Given an object <code>obj</code> of the type managed by this field (e.g. an array for ListField), and a non-empty <code>keys</code> list, retrieve the element indexed by the first key in <code>keys</code>. If there are no further keys in the list, return that element; otherwise, recursively call the subfield&apos;s <code>getElement</code> method with that element and the remaining keys.</p>
+<p><code>setElement(obj, keys, val)</code>
+: Given an object <code>obj</code> of the type managed by this field (e.g. an array for ListField), a non-empty <code>keys</code> list, and a new element value <code>val</code>: if <code>keys</code> consists of a single item, replace the element indexed by that key with <code>val</code> (after confirming that <code>val</code> is an accepted value), and if not, retrieve the element indexed by that first key and recursively call the subfield&apos;s <code>setElement</code> method with the remaining keys. Return true if this results in a change to the data, and false if not.</p>
+
+        </div>
+        <div class="footer-nav">
+          <div class="left"><a href="data_structures.html"><span class="title">Data structures</span></a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

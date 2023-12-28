@@ -1,0 +1,174 @@
+{
+  "toc": {
+    "sections": [
+      {
+        "title": "Catwalk",
+        "source": "README.md",
+        "url": "index.html",
+        "slug": "index",
+        "headings": [
+          {
+            "title": "Installation",
+            "depth": 2,
+            "id": "installation"
+          },
+          {
+            "title": "A simple example",
+            "depth": 2,
+            "id": "a-simple-example"
+          },
+          {
+            "title": "Why not React?",
+            "depth": 2,
+            "id": "why-not-react"
+          }
+        ]
+      },
+      {
+        "title": "Models",
+        "source": "docs/models.md",
+        "url": "models.html",
+        "slug": "models",
+        "headings": [
+          {
+            "title": "Typed fields",
+            "depth": 2,
+            "id": "typed-fields"
+          },
+          {
+            "title": "Events",
+            "depth": 2,
+            "id": "events"
+          },
+          {
+            "title": "JSON serialisation",
+            "depth": 2,
+            "id": "json-serialisation"
+          }
+        ]
+      },
+      {
+        "title": "Data structures",
+        "source": "docs/data_structures.md",
+        "url": "data_structures.html",
+        "slug": "data_structures",
+        "headings": [
+          {
+            "title": "ListField",
+            "depth": 2,
+            "id": "listfield"
+          },
+          {
+            "title": "StructField",
+            "depth": 2,
+            "id": "structfield"
+          },
+          {
+            "title": "TupleField",
+            "depth": 2,
+            "id": "tuplefield"
+          },
+          {
+            "title": "ModelField",
+            "depth": 2,
+            "id": "modelfield"
+          }
+        ]
+      },
+      {
+        "title": "Field API",
+        "source": "docs/field_api.md",
+        "url": "field_api.html",
+        "slug": "field_api"
+      }
+    ]
+  },
+  "index": {
+    "index.html": {
+      "source": "README.md",
+      "title": "Catwalk",
+      "pageTitle": "Catwalk",
+      "slug": "index",
+      "headings": [
+        {
+          "title": "Installation",
+          "depth": 2,
+          "id": "installation"
+        },
+        {
+          "title": "A simple example",
+          "depth": 2,
+          "id": "a-simple-example"
+        },
+        {
+          "title": "Why not React?",
+          "depth": 2,
+          "id": "why-not-react"
+        }
+      ]
+    },
+    "models.html": {
+      "source": "docs/models.md",
+      "title": "Models - Catwalk",
+      "pageTitle": "Models",
+      "slug": "models",
+      "headings": [
+        {
+          "title": "Typed fields",
+          "depth": 2,
+          "id": "typed-fields"
+        },
+        {
+          "title": "Events",
+          "depth": 2,
+          "id": "events"
+        },
+        {
+          "title": "JSON serialisation",
+          "depth": 2,
+          "id": "json-serialisation"
+        }
+      ]
+    },
+    "data_structures.html": {
+      "source": "docs/data_structures.md",
+      "title": "Data structures - Catwalk",
+      "pageTitle": "Data structures",
+      "slug": "data_structures",
+      "headings": [
+        {
+          "title": "ListField",
+          "depth": 2,
+          "id": "listfield"
+        },
+        {
+          "title": "StructField",
+          "depth": 2,
+          "id": "structfield"
+        },
+        {
+          "title": "TupleField",
+          "depth": 2,
+          "id": "tuplefield"
+        },
+        {
+          "title": "ModelField",
+          "depth": 2,
+          "id": "modelfield"
+        }
+      ]
+    },
+    "field_api.html": {
+      "source": "docs/field_api.md",
+      "title": "Field API - Catwalk",
+      "pageTitle": "Field API",
+      "slug": "field_api"
+    }
+  },
+  "sources": {
+    "README.md": "index.html",
+    "docs/models.md": "models.html",
+    "docs/data_structures.md": "data_structures.html",
+    "docs/field_api.md": "field_api.html"
+  }
+}

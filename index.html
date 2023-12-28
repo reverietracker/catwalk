@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/style.css?t=90051322">
+    <script src="assets/script.js?t=93f1a66c"></script>
+    <title>Catwalk</title>
+    <meta name="viewport" content="width=device-width">
+  </head>
+  <body class="-menu-visible">
+    <div class="doc-layout">
+      <div class="toggle menu-toggle js-menu-toggle"></div>
+      <div class="menu toc-menu">
+        <ul>
+          <li class="menu-item -level-0 -parent">
+            <ul class="submenu">
+              <li class="menu-item -level-1"><a class="link title -active link-index" href="index.html">Catwalk</a>
+                <ul class="headings heading-list">
+                  <li class="heading-item -depth-2"><a class="hlink link-installation" href="#installation">Installation</a>
+                  </li>
+                  <li class="heading-item -depth-2"><a class="hlink link-a-simple-example" href="#a-simple-example">A simple example</a>
+                  </li>
+                  <li class="heading-item -depth-2"><a class="hlink link-why-not-react" href="#why-not-react">Why not React?</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-models" href="models.html">Models</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-data_structures" href="data_structures.html">Data structures</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-field_api" href="field_api.html">Field API</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="body page-index">
+        <div class="header-nav">
+          <div class="right">
+          </div>
+        </div>
+        <div class="markdown-body"><h1 id="catwalk">Catwalk</h1>
+<p>Catwalk is a framework for JavaScript web apps that need to present a UI for managing complex structured data.</p>
+<p>The <code>catwalk</code> package provides the model layer of the framework. In Catwalk, a model is a JavaScript class with a set of fields defined on it, which may be simple values such as strings or integers, or data structures such as arrays. Fields can have validation applied, and model state can be serialised and deserialised to and from JSON. Most importantly, each field provides a &apos;change&apos; event that a UI component can listen to, allowing the UI to be efficiently kept in sync with the model.</p>
+<p>See also <a href="https://github.com/reverietracker/catwalk-ui">catwalk-ui</a>, which provides the UI layer.</p>
+<h2 id="installation">Installation</h2>
+<pre><code class="lang-sh">npm install catwalk
+</code></pre>
+<h2 id="a-simple-example">A simple example</h2>
+<pre><code class="lang-javascript">import { Model, fields } from &apos;catwalk&apos;;
+
+class Rectangle extends Model([
+    new fields.IntegerField(&apos;width&apos;, {min: 1, max: 1000}),
+    new fields.IntegerField(&apos;height&apos;, {min: 1, max: 1000}),
+    new fields.ValueField(&apos;color&apos;),
+]) {
+    getArea() {
+        return this.width * this.height;
+    }
+}
+
+const rect = new Rectangle({width: 320, height: 200, color: &apos;red&apos;});
+rect.on(&apos;changeWidth&apos;, (w) =&gt; console.log(&apos;width is now&apos;, w));
+rect.width = 640;
+</code></pre>
+<h2 id="why-not-react">Why not React?</h2>
+<p>Catwalk and React follow broadly the same principles: your UI layer is a window onto a data model, and when the state of that data model changes, the UI has to change to reflect that state change. In React, the standard way of working is for a UI component to implement a &apos;render&apos; method that generates the HTML representation for the new state in full; React then uses its internal magic to only update the parts of the DOM that have changed from the previous state.</p>
+<p>This is less ideal when the UI component is a data grid managing potentially hundreds of data values, and changes are frequent - a change to a single value means that the HTML for the entire grid structure has to be generated, and then React has to scan though it to find the one item that has changed. These internal optimisations in React do at least ensure that we don&apos;t need to rebuild the browser DOM on every change - but to anyone familiar with O(n) notation, this still feels Wrong. Nothing should ever have to loop over an array just to update a single item.</p>
+<p>In Catwalk, changing one item in an array will trigger a change event that the UI layer can respond to efficiently. In short - if you find that React has too much magic, Catwalk might be for you.</p>
+
+        </div>
+        <div class="footer-nav">
+          <div class="right"><a href="models.html"><span class="label">Next: </span><span class="title">Models</span></a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

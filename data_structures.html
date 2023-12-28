@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/style.css?t=90051322">
+    <script src="assets/script.js?t=93f1a66c"></script>
+    <title>Data structures - Catwalk</title>
+    <meta name="viewport" content="width=device-width">
+  </head>
+  <body class="-menu-visible">
+    <div class="doc-layout">
+      <div class="toggle menu-toggle js-menu-toggle"></div>
+      <div class="menu toc-menu">
+        <ul>
+          <li class="menu-item -level-0 -parent">
+            <ul class="submenu">
+              <li class="menu-item -level-1"><a class="link title  link-index" href="index.html">Catwalk</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-models" href="models.html">Models</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title -active link-data_structures" href="data_structures.html">Data structures</a>
+                <ul class="headings heading-list">
+                  <li class="heading-item -depth-2"><a class="hlink link-listfield" href="#listfield">ListField</a>
+                  </li>
+                  <li class="heading-item -depth-2"><a class="hlink link-structfield" href="#structfield">StructField</a>
+                  </li>
+                  <li class="heading-item -depth-2"><a class="hlink link-tuplefield" href="#tuplefield">TupleField</a>
+                  </li>
+                  <li class="heading-item -depth-2"><a class="hlink link-modelfield" href="#modelfield">ModelField</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-field_api" href="field_api.html">Field API</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="body page-data_structures">
+        <div class="header-nav">
+          <div class="right">
+          </div>
+        </div>
+        <div class="markdown-body"><h1 id="data-structures">Data structures</h1>
+<h2 id="listfield">ListField</h2>
+<p>So far, the fields we&apos;ve looked at only hold single values. We can also store arrays of values using <code>ListField</code>:</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> { Model, fields } = <span class="pl-c1">require</span>(<span class="pl-s">&apos;catwalk&apos;</span>);
+
+<span class="pl-k">const</span> Sample = Model([
+    <span class="pl-k">new</span> fields.ListField(
+        <span class="pl-s">&apos;volumes&apos;</span>, <span class="pl-k">new</span> fields.IntegerField(<span class="pl-s">&apos;volume&apos;</span>, {<span class="hljs-attr">default</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">max</span>: <span class="hljs-number">255</span>}), {<span class="hljs-attr">length</span>: <span class="hljs-number">8</span>}
+    ),
+]);
+
+<span class="pl-k">const</span> s = <span class="pl-k">new</span> Sample({<span class="hljs-attr">volumes</span>: [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">8</span>, <span class="hljs-number">12</span>, <span class="hljs-number">24</span>, <span class="hljs-number">48</span>, <span class="hljs-number">96</span>]});
+</code></pre>
+<p>All elements of the array are of the same type (given by the second parameter), and arrays are fixed length as determined by the options dictionary (the third parameter). The following options are recognised:</p>
+<p><code>startIndex</code>
+: The number that array indexes should start from (default: 0).</p>
+<p><code>length</code>
+: The array length.</p>
+<p><code>endIndex</code>
+: One greater than the maximum valid array index. Either <code>length</code> or <code>endIndex</code> must be specified.</p>
+<p><code>default</code>
+: An array to use as the default value for the array. If not specified, each element of the array will be initialised to the value specified within the element type.</p>
+<p><code>elementName</code>
+: Name used for accessor methods; defaults to the field name of the subfield (<code>volume</code> in the example above).</p>
+<p><code>getterName</code>
+: Name of the getter method; defaults to <code>get</code> plus the capitalised version of <code>elementName</code> (e.g. <code>getVolume</code>).</p>
+<p><code>setterName</code>
+: Name of the setter method; defaults to <code>set</code> plus the capitalised version of <code>elementName</code> (e.g. <code>setVolume</code>).</p>
+<p><code>eventName</code>
+: Name of the event fired on change; defaults to <code>change</code> plus the capitalised version of <code>elementName</code> (e.g. <code>changeVolume</code>).</p>
+<p>Using standard array notation to access array elements (e.g. <code>s.volumes[2]</code>) will work, but this will bypass any validation checks and event handlers. Instead, you should use the methods <code>getVolume</code> and <code>setVolume</code>; these methods are defined automatically based on the field name for an individual element (&apos;volume&apos; here).</p>
+<pre><code class="lang-javascript"><span class="pl-c1">console</span>.log(s.getVolume(<span class="hljs-number">5</span>));  <span class="pl-c">// 24</span>
+s.setVolume(<span class="hljs-number">5</span>, <span class="hljs-number">32</span>);
+<span class="pl-c1">console</span>.log(s.getVolume(<span class="hljs-number">5</span>));  <span class="pl-c">// 32</span>
+s.setVolume(<span class="hljs-number">5</span>, <span class="hljs-number">999</span>);
+<span class="pl-c1">console</span>.log(s.getVolume(<span class="hljs-number">5</span>));  <span class="pl-c">// 255</span>
+</code></pre>
+<p>Like other field types, <code>ListField</code> implements a change event; event listeners are passed the index of the changed element, and its new value.</p>
+<pre><code class="lang-javascript">s.on(<span class="pl-s">&apos;changeVolume&apos;</span>, (i, val) =&gt; {
+    <span class="pl-c1">console</span>.log(<span class="pl-s">`Volume element <span class="hljs-subst">${i}</span> is now <span class="hljs-subst">${val}</span>`</span>);
+});
+s.setVolume(<span class="hljs-number">5</span>, <span class="hljs-number">99</span>);  <span class="pl-c">// &quot;Volume element 5 is now 99&quot;</span>
+</code></pre>
+<p>Elements within ListField can be any field type, including ListField itself:</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> Sprite = Model([
+    <span class="pl-k">new</span> fields.ListField(
+        <span class="pl-s">&apos;bitmap&apos;</span>,
+        <span class="pl-k">new</span> fields.ListField(<span class="pl-s">&apos;row&apos;</span>, <span class="pl-k">new</span> fields.BooleanField(<span class="pl-s">&apos;col&apos;</span>), {<span class="hljs-attr">length</span>: <span class="hljs-number">8</span>}),
+        {<span class="hljs-attr">length</span>: <span class="hljs-number">8</span>},
+        {<span class="hljs-attr">elementName</span>: <span class="pl-s">&apos;pixel&apos;</span>}
+    ),
+]);
+
+smiley = <span class="pl-k">new</span> Sprite({
+    <span class="pl-s">&apos;bitmap&apos;</span>: [
+        <span class="pl-c">// 0/1 used here for legibility, but these will be cast to true/false by BooleanField</span>
+        [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+        [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>],
+        [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>],
+        [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>],
+        [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>],
+        [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>],
+        [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>],
+        [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+    ]
+})
+</code></pre>
+<p>Setting <code>{elementName: &apos;pixel&apos;}</code> in the above definition means that the getter / setter functions will be named <code>getPixel</code> and <code>setPixel</code>, and the change event will be named <code>changePixel</code>. (Otherwise, the name <code>row</code> would be used, giving <code>getRow</code>, <code>setRow</code> and <code>changeRow</code>.)</p>
+<p>For accessing individual elements, the getter and setter methods generalise to any number of arguments:</p>
+<pre><code class="lang-javascript"><span class="pl-c1">console</span>.log(smiley.getPixel(<span class="hljs-number">2</span>, <span class="hljs-number">5</span>));  <span class="pl-c">// false - pixel 5 of row 2</span>
+smiley.setPixel(<span class="hljs-number">2</span>, <span class="hljs-number">5</span>, <span class="pl-c1">true</span>);
+</code></pre>
+<p>Likewise, when a change event is fired, event listeners will be passed as many arguments as required to identify the changed element:</p>
+<pre><code class="lang-javascript">smiley.on(<span class="pl-s">&apos;changePixel&apos;</span>, (row, col, newVal) =&gt; {
+    <span class="pl-c1">console</span>.log(<span class="pl-s">`pixel (<span class="hljs-subst">${row}</span>, <span class="hljs-subst">${col}</span>) changed to <span class="hljs-subst">${newVal}</span>`</span>);
+});
+</code></pre>
+<p>Non-zero-based lists are serialised to an array consisting of just the range of valid elements, but in all other contexts (e.g. when passing an initial value to the model&apos;s constructor, or retrieving the full list through the getter method) the value is padded with initial <code>undefined</code> values to give the correct indexes.</p>
+<pre><code class="lang-javascript">
+<span class="pl-k">const</span> Sample = Model([
+    <span class="pl-k">new</span> fields.ListField(
+        <span class="pl-s">&apos;volumes&apos;</span>, <span class="pl-k">new</span> fields.IntegerField(<span class="pl-s">&apos;volume&apos;</span>), {<span class="hljs-attr">startIndex</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">length</span>: <span class="hljs-number">8</span>}
+    ),
+]);
+
+<span class="pl-k">const</span> s = <span class="pl-k">new</span> Sample({<span class="hljs-attr">volumes</span>: [<span class="pl-c1">undefined</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">8</span>, <span class="hljs-number">12</span>, <span class="hljs-number">24</span>, <span class="hljs-number">48</span>, <span class="hljs-number">96</span>]});
+s.toJSON();  <span class="pl-c">// &apos;{&quot;volumes&quot;: [1, 2, 4, 8, 12, 24, 48, 96]}&apos;</span>
+s.getVolume();  <span class="pl-c">// [undefined, 1, 2, 4, 8, 12, 24, 48, 96]</span>
+</code></pre>
+<h2 id="structfield">StructField</h2>
+<p>A <code>StructField</code> allows storing a group of fields, potentially of different types, to be retrieved either as a dictionary or individually. It can also be nested inside ListField (and vice versa):</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> { Model, fields } = <span class="pl-c1">require</span>(<span class="pl-s">&apos;catwalk&apos;</span>);
+
+<span class="pl-k">const</span> Polygon = Model([
+    <span class="pl-k">new</span> fields.ListField(
+        <span class="pl-s">&apos;vertices&apos;</span>, <span class="pl-k">new</span> fields.StructField(<span class="pl-s">&apos;vertex&apos;</span>, [
+            <span class="pl-k">new</span> fields.IntegerField(<span class="pl-s">&apos;x&apos;</span>),
+            <span class="pl-k">new</span> fields.IntegerField(<span class="pl-s">&apos;y&apos;</span>),
+        ]), {<span class="hljs-attr">length</span>: <span class="hljs-number">3</span>}
+    ),
+]);
+
+<span class="pl-k">const</span> p = <span class="pl-k">new</span> Polygon({<span class="hljs-attr">vertices</span>: [
+    {<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">0</span>},
+    {<span class="hljs-attr">x</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">0</span>},
+    {<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">3</span>},
+]});
+
+<span class="pl-c1">console</span>.log(s.getVertex(<span class="hljs-number">1</span>));  <span class="pl-c">// {x: 4, y: 0}</span>
+<span class="pl-c1">console</span>.log(s.getVertex(<span class="hljs-number">1</span>, <span class="pl-s">&apos;x&apos;</span>));  <span class="pl-c">// 4</span>
+</code></pre>
+<h2 id="tuplefield">TupleField</h2>
+<p><code>TupleField</code> is similar to <code>StructField</code>, but the sub-fields within it are managed as an array and referenced by index rather than name:</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> { Model, fields } = <span class="pl-c1">require</span>(<span class="pl-s">&apos;catwalk&apos;</span>);
+
+<span class="pl-k">const</span> Polygon = Model([
+    <span class="pl-k">new</span> fields.ListField(
+        <span class="pl-s">&apos;vertices&apos;</span>, <span class="pl-k">new</span> fields.TupleField(<span class="pl-s">&apos;vertex&apos;</span>, [
+            <span class="pl-k">new</span> fields.IntegerField(<span class="pl-s">&apos;x&apos;</span>),
+            <span class="pl-k">new</span> fields.IntegerField(<span class="pl-s">&apos;y&apos;</span>),
+        ]), {<span class="hljs-attr">length</span>: <span class="hljs-number">3</span>}
+    ),
+]);
+
+<span class="pl-k">const</span> p = <span class="pl-k">new</span> Polygon({<span class="hljs-attr">vertices</span>: [
+    [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-number">4</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-number">0</span>, <span class="hljs-number">3</span>],
+]});
+
+<span class="pl-c1">console</span>.log(s.getVertex(<span class="hljs-number">1</span>));  <span class="pl-c">// [4, 0]</span>
+<span class="pl-c1">console</span>.log(s.getVertex(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>));  <span class="pl-c">// 4</span>
+</code></pre>
+<p>The sub-fields within a TupleField are assigned names like any other field, but these names are unused and do not need to be unique.</p>
+<h2 id="modelfield">ModelField</h2>
+<p>A <code>ModelField</code> holds a reference to an instance of a given model.</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> { Model, fields } = <span class="pl-c1">require</span>(<span class="pl-s">&apos;catwalk&apos;</span>);
+
+<span class="pl-k">const</span> Polygon = Model([
+    <span class="pl-k">new</span> fields.ListField(
+        <span class="pl-s">&apos;vertices&apos;</span>, <span class="pl-k">new</span> fields.TupleField(<span class="pl-s">&apos;vertex&apos;</span>, [
+            <span class="pl-k">new</span> fields.IntegerField(<span class="pl-s">&apos;x&apos;</span>),
+            <span class="pl-k">new</span> fields.IntegerField(<span class="pl-s">&apos;y&apos;</span>),
+        ]), {<span class="hljs-attr">length</span>: <span class="hljs-number">3</span>}
+    ),
+]);
+
+<span class="pl-k">const</span> Scene = Model([
+    <span class="pl-k">new</span> fields.ListField(
+        <span class="pl-s">&apos;polygons&apos;</span>, <span class="pl-k">new</span> fields.ModelField(<span class="pl-s">&apos;polygon&apos;</span>, Polygon), {<span class="hljs-attr">length</span>: <span class="hljs-number">3</span>}
+    )
+]);
+
+scene = <span class="pl-k">new</span> Scene({
+    <span class="pl-s">&apos;polygons&apos;</span>: [
+        <span class="pl-k">new</span> Polygon({<span class="pl-s">&apos;vertices&apos;</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">3</span>]}),
+        <span class="pl-k">new</span> Polygon({<span class="pl-s">&apos;vertices&apos;</span>: [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">5</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">4</span>]}),
+        <span class="pl-k">new</span> Polygon({<span class="pl-s">&apos;vertices&apos;</span>: [<span class="hljs-number">2</span>, <span class="hljs-number">2</span>], [<span class="hljs-number">6</span>, <span class="hljs-number">2</span>], [<span class="hljs-number">2</span>, <span class="hljs-number">5</span>]}),
+    ]
+});
+</code></pre>
+<p>Note: It is possible to create circular references using <code>ModelField</code>, but the <code>toJSON</code> method has no mechanism to detect these, and serialising them will fail with an infinite recursion.</p>
+
+        </div>
+        <div class="footer-nav">
+          <div class="left"><a href="models.html"><span class="title">Models</span></a></div>
+          <div class="right"><a href="field_api.html"><span class="label">Next: </span><span class="title">Field API</span></a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
