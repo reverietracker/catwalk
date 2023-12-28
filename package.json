@@ -1,7 +1,7 @@
 {
   "name": "catwalk",
-  "version": "1.0.0",
-  "description": "a framework that isn't react",
+  "version": "0.1.0",
+  "description": "A framework for building web apps around structured data models",
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage"

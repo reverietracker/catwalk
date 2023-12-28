@@ -4,6 +4,8 @@ Catwalk is a framework for JavaScript web apps that need to present a UI for man
 
 The `catwalk` package provides the model layer of the framework. In Catwalk, a model is a JavaScript class with a set of fields defined on it, which may be simple values such as strings or integers, or data structures such as arrays. Fields can have validation applied, and model state can be serialised and deserialised to and from JSON. Most importantly, each field provides a 'change' event that a UI component can listen to, allowing the UI to be efficiently kept in sync with the model.
 
+See also [catwalk-ui](https://github.com/reverietracker/catwalk-ui), which provides the UI layer.
+
 ## Installation
 
 ```sh
