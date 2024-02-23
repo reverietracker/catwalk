@@ -119,6 +119,11 @@ class OneBasedSequence extends Model([
     ),
 ]) {}
 
+test('default values for non-zero-based lists use correct padding', () => {
+    const seq = new OneBasedSequence();
+    expect(seq.getElement()).toEqual([undefined, 0, 0, 0, 0, 0]);
+});
+
 test('items can be retrieved from non-zero-based lists', () => {
     const seq = new OneBasedSequence({elements: [null, 2, 3, 5, 7, 11]});
     expect(seq.getElement(3)).toBe(5);
