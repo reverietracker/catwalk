@@ -1,6 +1,6 @@
 {
   "name": "catwalk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A framework for building web apps around structured data models",
   "main": "index.js",
   "scripts": {
