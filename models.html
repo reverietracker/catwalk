@@ -51,7 +51,7 @@
 <span class="pl-k">const</span> r = <span class="pl-k">new</span> Rectangle({<span class="hljs-attr">width</span>: <span class="hljs-number">320</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>});
 </code></pre>
 <p>could be rewritten as a Catwalk model like this:</p>
-<pre><code class="lang-javascript"><span class="pl-k">const</span> { Model, fields } = <span class="pl-c1">require</span>(<span class="pl-s">&apos;catwalk&apos;</span>);
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { Model, fields } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk&apos;</span>;
 
 <span class="pl-k">const</span> Rectangle = Model([
     <span class="pl-k">new</span> fields.ValueField(<span class="pl-s">&apos;width&apos;</span>),

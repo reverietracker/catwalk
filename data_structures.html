@@ -44,7 +44,7 @@
         <div class="markdown-body"><h1 id="data-structures">Data structures</h1>
 <h2 id="listfield">ListField</h2>
 <p>So far, the fields we&apos;ve looked at only hold single values. We can also store arrays of values using <code>ListField</code>:</p>
-<pre><code class="lang-javascript"><span class="pl-k">const</span> { Model, fields } = <span class="pl-c1">require</span>(<span class="pl-s">&apos;catwalk&apos;</span>);
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { Model, fields } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk&apos;</span>;
 
 <span class="pl-k">const</span> Sample = Model([
     <span class="pl-k">new</span> fields.ListField(
@@ -132,7 +132,7 @@ s.getVolume();  <span class="pl-c">// [undefined, 1, 2, 4, 8, 12, 24, 48, 96]</s
 </code></pre>
 <h2 id="structfield">StructField</h2>
 <p>A <code>StructField</code> allows storing a group of fields, potentially of different types, to be retrieved either as a dictionary or individually. It can also be nested inside ListField (and vice versa):</p>
-<pre><code class="lang-javascript"><span class="pl-k">const</span> { Model, fields } = <span class="pl-c1">require</span>(<span class="pl-s">&apos;catwalk&apos;</span>);
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { Model, fields } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk&apos;</span>;
 
 <span class="pl-k">const</span> Polygon = Model([
     <span class="pl-k">new</span> fields.ListField(
@@ -154,7 +154,7 @@ s.getVolume();  <span class="pl-c">// [undefined, 1, 2, 4, 8, 12, 24, 48, 96]</s
 </code></pre>
 <h2 id="tuplefield">TupleField</h2>
 <p><code>TupleField</code> is similar to <code>StructField</code>, but the sub-fields within it are managed as an array and referenced by index rather than name:</p>
-<pre><code class="lang-javascript"><span class="pl-k">const</span> { Model, fields } = <span class="pl-c1">require</span>(<span class="pl-s">&apos;catwalk&apos;</span>);
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { Model, fields } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk&apos;</span>;
 
 <span class="pl-k">const</span> Polygon = Model([
     <span class="pl-k">new</span> fields.ListField(
@@ -177,7 +177,7 @@ s.getVolume();  <span class="pl-c">// [undefined, 1, 2, 4, 8, 12, 24, 48, 96]</s
 <p>The sub-fields within a TupleField are assigned names like any other field, but these names are unused and do not need to be unique.</p>
 <h2 id="modelfield">ModelField</h2>
 <p>A <code>ModelField</code> holds a reference to an instance of a given model.</p>
-<pre><code class="lang-javascript"><span class="pl-k">const</span> { Model, fields } = <span class="pl-c1">require</span>(<span class="pl-s">&apos;catwalk&apos;</span>);
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { Model, fields } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk&apos;</span>;
 
 <span class="pl-k">const</span> Polygon = Model([
     <span class="pl-k">new</span> fields.ListField(
