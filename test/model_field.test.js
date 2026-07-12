@@ -1,4 +1,6 @@
-const { Model, fields } = require('../');
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { Model, fields } from '../index.js';
 
 class Artist extends Model([
     new fields.ValueField('name'),
@@ -13,18 +15,18 @@ class Band extends Model([
 test('model fields use an empty instance as default', () => {
     const beatles = new Band();
     const member = beatles.getMember(0);
-    expect(member).toBeInstanceOf(Artist);
-    expect(member.name).toBe(null);
+    assert.ok(member instanceof Artist);
+    assert.strictEqual(member.name, null);
 });
 
 test('models can be deserialised', () => {
     const beatlesJson = '{"members": [{"name": "John"}, {"name": "Paul"}, {"name": "Ringo"}, {"name": "George"}]}';
     const beatles = Band.fromJSON(beatlesJson);
-    expect(beatles).toBeInstanceOf(Band);
+    assert.ok(beatles instanceof Band);
     const john = beatles.getMember(0);
-    expect(john).toBeInstanceOf(Artist);
-    expect(john.name).toBe("John");
+    assert.ok(john instanceof Artist);
+    assert.strictEqual(john.name, "John");
 
     const beatlesSerialized = beatles.toJSON();
-    expect(JSON.parse(beatlesJson)).toEqual(JSON.parse(beatlesSerialized));
+    assert.deepStrictEqual(JSON.parse(beatlesJson), JSON.parse(beatlesSerialized));
 });

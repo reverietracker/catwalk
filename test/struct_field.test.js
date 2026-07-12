@@ -1,4 +1,6 @@
-const { Model, fields } = require('../');
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { Model, fields } from '../index.js';
 
 class Sprite extends Model([
     new fields.StructField('position', [
@@ -16,34 +18,34 @@ class Character extends Model([
 
 test('struct field elements can be retrieved', () => {
     const sprite = new Sprite({'position': {'x': 128, 'y': 88}});
-    expect(sprite.getPosition('y')).toBe(88);
+    assert.strictEqual(sprite.getPosition('y'), 88);
 });
 
 test('struct fields can be retrieved in full', () => {
     const sprite = new Sprite({'position': {'x': 128, 'y': 88}});
-    expect(sprite.getPosition()).toEqual({'x': 128, 'y': 88});
+    assert.deepStrictEqual(sprite.getPosition(), {'x': 128, 'y': 88});
 });
 
 test('struct defaults are picked up from subfields', () => {
     const sprite = new Sprite();
-    expect(sprite.getPosition('x')).toBe(32);
+    assert.strictEqual(sprite.getPosition('x'), 32);
 });
 
 test('struct field elements can be set', () => {
     const sprite = new Sprite({'position': {'x': 128, 'y': 88}});
     sprite.setPosition('x', 100);
-    expect(sprite.getPosition('x')).toBe(100);
+    assert.strictEqual(sprite.getPosition('x'), 100);
 });
 
 test('validation is applied when setting struct items', () => {
     const sprite = new Sprite({'position': {'x': 128, 'y': 88}});
     sprite.setPosition('y', 999);
-    expect(sprite.getPosition('y')).toBe(192);
+    assert.strictEqual(sprite.getPosition('y'), 192);
 });
 
 test('missing fields are populated with defaults', () => {
     const sprite = new Sprite({'position': {'x': 128}});
-    expect(sprite.getPosition('y')).toBe(24);
+    assert.strictEqual(sprite.getPosition('y'), 24);
 });
 
 test('change events on structs are triggered', () => {
@@ -53,11 +55,11 @@ test('change events on structs are triggered', () => {
         status = 'position ' + index + ' changed to ' + newVal;
     });
     sprite.setPosition('x', 128);
-    expect(status).toBe('unchanged');
+    assert.strictEqual(status, 'unchanged');
     sprite.setPosition('x', 'purple');
-    expect(status).toBe('unchanged');
+    assert.strictEqual(status, 'unchanged');
     sprite.setPosition('x', 100);
-    expect(status).toBe('position x changed to 100');
+    assert.strictEqual(status, 'position x changed to 100');
 });
 
 test('model-wide change events on structs are triggered', () => {
@@ -67,23 +69,23 @@ test('model-wide change events on structs are triggered', () => {
         status = fieldName + ' ' + index + ' changed to ' + newVal;
     });
     sprite.setPosition('x', 128);
-    expect(status).toBe('unchanged');
+    assert.strictEqual(status, 'unchanged');
     sprite.setPosition('x', 'purple');
-    expect(status).toBe('unchanged');
+    assert.strictEqual(status, 'unchanged');
     sprite.setPosition('x', 100);
-    expect(status).toBe('position x changed to 100');
+    assert.strictEqual(status, 'position x changed to 100');
 });
 
 test('struct fields can be serialised', () => {
     const sprite = new Sprite({'position': {'x': 128, 'y': 88}});
     const spriteJson = sprite.toJSON();
-    expect(JSON.parse(spriteJson)).toEqual({'position': {'x': 128, 'y': 88}});
+    assert.deepStrictEqual(JSON.parse(spriteJson), {'position': {'x': 128, 'y': 88}});
 });
 
 test('struct fields can be deserialised', () => {
     const sprite = Sprite.fromJSON('{"position": {"x": 128, "thing": 99}}');
-    expect(sprite.getPosition('x')).toBe(128);
-    expect(sprite.getPosition('y')).toBe(24);
+    assert.strictEqual(sprite.getPosition('x'), 128);
+    assert.strictEqual(sprite.getPosition('y'), 24);
 });
 
 
@@ -92,7 +94,7 @@ test('subfields within struct fields can be retrieved recursively', () => {
         'vertices': [1, 2, 3, 4],
         'edges': [5, 6, 7, 8],
     }});
-    expect(char.getPolygon('edges', 1)).toBe(6);
+    assert.strictEqual(char.getPolygon('edges', 1), 6);
 });
 
 test('subfields within struct fields can be set recursively', () => {
@@ -101,5 +103,5 @@ test('subfields within struct fields can be set recursively', () => {
         'edges': [5, 6, 7, 8],
     }});
     char.setPolygon('edges', 1, 99)
-    expect(char.getPolygon('edges', 1)).toBe(99);
+    assert.strictEqual(char.getPolygon('edges', 1), 99);
 });

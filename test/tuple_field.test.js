@@ -1,4 +1,6 @@
-const { Model, fields } = require('../');
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { Model, fields } from '../index.js';
 
 class Sprite extends Model([
     new fields.TupleField('position', [
@@ -9,24 +11,24 @@ class Sprite extends Model([
 
 test('tuple field elements can be retrieved', () => {
     const sprite = new Sprite({'position': [128,88]});
-    expect(sprite.getPosition(1)).toBe(88);
+    assert.strictEqual(sprite.getPosition(1), 88);
 });
 
 test('tuple defaults are picked up from subfields', () => {
     const sprite = new Sprite();
-    expect(sprite.getPosition(0)).toBe(32);
+    assert.strictEqual(sprite.getPosition(0), 32);
 });
 
 test('tuple field elements can be set', () => {
     const sprite = new Sprite({'position': [128,88]});
     sprite.setPosition(0, 100);
-    expect(sprite.getPosition(0)).toBe(100);
+    assert.strictEqual(sprite.getPosition(0), 100);
 });
 
 test('validation is applied when setting tuple items', () => {
     const sprite = new Sprite({'position': [128,88]});
     sprite.setPosition(1, 999);
-    expect(sprite.getPosition(1)).toBe(192);
+    assert.strictEqual(sprite.getPosition(1), 192);
 });
 
 test('change events on tuples are triggered', () => {
@@ -36,9 +38,9 @@ test('change events on tuples are triggered', () => {
         status = 'position ' + index + ' changed to ' + newVal;
     });
     sprite.setPosition(0, 128);
-    expect(status).toBe('unchanged');
+    assert.strictEqual(status, 'unchanged');
     sprite.setPosition(0, 100);
-    expect(status).toBe('position 0 changed to 100');
+    assert.strictEqual(status, 'position 0 changed to 100');
 });
 
 test('model-wide change events on tuples are triggered', () => {
@@ -48,18 +50,18 @@ test('model-wide change events on tuples are triggered', () => {
         status = fieldName + ' ' + index + ' changed to ' + newVal;
     });
     sprite.setPosition(0, 128);
-    expect(status).toBe('unchanged');
+    assert.strictEqual(status, 'unchanged');
     sprite.setPosition(0, 100);
-    expect(status).toBe('position 0 changed to 100');
+    assert.strictEqual(status, 'position 0 changed to 100');
 });
 
 test('tuple fields can be serialised', () => {
     const sprite = new Sprite({'position': [128,88]});
     const spriteJson = sprite.toJSON();
-    expect(JSON.parse(spriteJson)).toEqual({'position': [128,88]});
+    assert.deepStrictEqual(JSON.parse(spriteJson), {'position': [128,88]});
 });
 
 test('tuple fields can be deserialised', () => {
     const sprite = Sprite.fromJSON('{"position": [128,88]}');
-    expect(sprite.getPosition(0)).toBe(128);
+    assert.strictEqual(sprite.getPosition(0), 128);
 });

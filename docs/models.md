@@ -16,7 +16,7 @@ const r = new Rectangle({width: 320, height: 200});
 could be rewritten as a Catwalk model like this:
 
 ```javascript
-const { Model, fields } = require('catwalk');
+import { Model, fields } from 'catwalk';
 
 const Rectangle = Model([
     new fields.ValueField('width'),

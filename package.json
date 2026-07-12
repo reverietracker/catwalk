@@ -3,13 +3,13 @@
   "version": "0.1.1",
   "description": "A framework for building web apps around structured data models",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "jest --coverage"
+    "test": "node --test --experimental-test-coverage"
   },
   "author": "Matt Westcott",
   "license": "ISC",
   "devDependencies": {
-    "docpress": "^0.8.2",
-    "jest": "^30.2.0"
+    "docpress": "^0.8.2"
   }
 }

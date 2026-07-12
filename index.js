@@ -1,5 +1,4 @@
-const fields = require('./lib/fields');
-const { Model } = require('./lib/models');
+import * as fields from './lib/fields.js';
+import { Model } from './lib/models.js';
 
-
-module.exports = { fields, Model };
+export { fields, Model };
